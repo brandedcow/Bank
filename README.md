@@ -1,10 +1,6 @@
-Christopher Kang
-SJSU
-2017
+Christopher Kang 2017
 
-All functions working
-
-Batch Input Currently Disabled
+Bank System utilizing Java, JDBC, DB2
 
 Files:
 --------------------------
