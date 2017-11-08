@@ -284,7 +284,7 @@ public class BankingSystem {
 			String output =":: REPORT A - FAILURE\n";
 			con = DriverManager.getConnection(url,username,password);
 			stmt = con.createStatement();
-			String query = "SELECT DISTINCT P1.CUSTOMER.ID, NAME, AGE, GENDER, (SELECT COALESCE(SUM(BALANCE),0) AS TOTAL FROM P1.ACCOUNT WHERE (ID=P1.CUSTOMER.ID AND STATUS='A')) AS BALANCE FROM P1.CUSTOMER LEFT JOIN P1.ACCOUNT ON P1.CUSTOMER.ID = P1.ACCOUNT.ID";
+			String query = "SELECT * FROM V_TOTAL_BALANCE";
 			rs = stmt.executeQuery(query);
 			if (rs.next()) {
 				rs = stmt.executeQuery(query);
@@ -292,11 +292,12 @@ public class BankingSystem {
 				output += String.format("%-5s %-12s %-4s %-6s %-12s\n", "ID","NAME","AGE","GENDER","BALANCE");
 				System.out.println(output);
 				while(rs.next()) {
-					output = String.format("%-5s %-12s %-4s %-6s %-12s/n", rs.getString(1), rs.getString(2), rs.getString(3), rs.getString(4), rs.getString(5));
+					output = String.format("%-5s %-12s %-4s %-6s %-12s", rs.getString(1), rs.getString(2), rs.getString(3), rs.getString(4), rs.getString(5));
 					System.out.println(output);
 				}
+			} else {
+				System.out.println(output);
 			}
-			System.out.println(output);
 			con.close();
 		} catch (Exception err) {
 			System.out.println(":: REPORT A - FAILURE");
@@ -317,7 +318,7 @@ public class BankingSystem {
 			String output =":: REPORT B - FAILURE\n";
 			con = DriverManager.getConnection(url,username,password);
 			stmt = con.createStatement();
-			String query = String.format("SELECT AVG(BALANCE) AS AVERAGE FROM (SELECT DISTINCT P1.CUSTOMER.ID, NAME, AGE, GENDER, (SELECT COALESCE(SUM(BALANCE),0) AS TOTAL FROM P1.ACCOUNT WHERE (ID = P1.CUSTOMER.ID AND STATUS='A') ) AS BALANCE FROM P1.CUSTOMER LEFT JOIN P1.ACCOUNT ON P1.CUSTOMER.ID = P1.ACCOUNT.ID WHERE AGE>%s AND AGE<%s)",min, max);
+			String query = String.format("SELECT AVG(BALANCE) FROM V_TOTAL_BALANCE WHERE AGE>=%s AND AGE<=%s",min, max);
 			rs = stmt.executeQuery(query);
 			if (rs != null) {
 				output = ":: REPORT B - SUCCESS";
